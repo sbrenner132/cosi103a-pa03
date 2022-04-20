@@ -303,6 +303,34 @@ app.post('/courses/byInst',
   }
 )
 
+app.get('/courses/byName/:name',
+  // show a list of all courses taught passed with the name or keyword
+  async (req,res,next) => {
+    const name = req.params.name;
+    // Regex search by title or just keyword and with case insensitivity
+    const courses = await Course.find({name:{$regex: name, $options: 'i'}})
+    //res.json(courses)
+    res.locals.courses = courses
+    res.render('courselist')
+  } 
+)
+
+app.post('/courses/byName',
+  // show courses by keyword or title from a form
+  async (req,res,next) => {
+    const name = req.body.course_name;
+    // Regex search by title or just keyword and with case insensitivity
+    const courses = 
+       await Course
+               .find({name:{$regex: name, $options: 'i'}})
+               .sort({term:1,num:1,section:1})
+    //res.json(courses)
+    res.locals.courses = courses
+    // res.locals.times2str = times2str
+    res.render('courselist')
+  }
+)
+
 app.use(isLoggedIn)
 
 app.get('/addCourse/:courseId',
