@@ -1,16 +1,53 @@
-<ul>
-    <% for (course of courses){%>
-        <li> 
-            <a href="/schedule/remove/<%= course._id %>">X</a>
-            <%= course['subject'] %>
-            <%= course.coursenum %>
-            <%= course.name %>
-            <%= course.term %>
-            
-        </li>
-    <% } %>
-</ul>
+<html>
+<head>
+<style>
+.flex-container {
+  display: flex;
+  background-color: #E6E6FA;
+  flex-direction: column;
+}
 
+.flex-container > div {
+  background-color: #fdf5e6;
+  margin: 10px;
+  text-align: justify;
+  line-height: 20px;
+  font-size: 15px;
+}
+</style>
+</head>
+<body>
+<h1>My Schedule</h1>
+
+<div class="flex-container">
+
+      <% for (course of courses){%>
+              <div class="flex-container">
+                <a href="/schedule/remove/<%= course._id %>">X</a>
+                  <span>
+                      <%= course.subject %>
+                      <%= course.coursenum %>
+                      <%= course.term %>
+                  </span>
+                  <strong><%= course.name %></strong>
+                  <%=course.instructor[0] %>
+                  <%=course.instructor[1] %>
+                  (<%=course.instructor[2] %>)
+                 Enrollment: <%=course.enrolled %>,
+                 Limit: <%=course.limit || 999 %>,
+                 Waitlist: <%= course.waiting %>
+                 <br><br>
+                 Times: <%= course.strTimes %>
+                 <br>
+                  <em><%=course.details %></em>
+                  <br>
+                  <%=course.description %>
+              </div>
+      <% } %>
+
+</div>
+</body>
+</html>
 <!--
     <pre>
         <%= JSON.stringify(courses,null,5) %>

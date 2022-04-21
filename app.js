@@ -11,7 +11,7 @@ const express = require("express");
 const path = require("path");  // to refer to local paths
 const cookieParser = require("cookie-parser"); // to handle cookies
 const session = require("express-session"); // to handle sessions using cookies
-const debug = require("debug")("personalapp:server"); 
+const debug = require("debug")("personalapp:server");
 const layouts = require("express-ejs-layouts");
 const axios = require("axios")
 
@@ -39,7 +39,7 @@ const mongodb_URI = 'mongodb+srv://cs_sj:BrandeisSpr22@cluster0.kgugl.mongodb.ne
 
 mongoose.connect( mongodb_URI, { useNewUrlParser: true, useUnifiedTopology: true } );
 // fix deprecation warnings
-mongoose.set('useFindAndModify', false); 
+mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 
 const db = mongoose.connection;
@@ -51,7 +51,7 @@ db.once('open', function() {console.log("we are connected!!!")});
 
 
 // *********************************************************** //
-// Initializing the Express server 
+// Initializing the Express server
 // This code is run once when the app is started and it creates
 // a server that respond to requests by sending responses
 // *********************************************************** //
@@ -63,7 +63,7 @@ app.set("view engine", "ejs");
 
 
 
-// this allows us to use page layout for the views 
+// this allows us to use page layout for the views
 // so we don't have to repeat the headers and footers on every page ...
 // the layout is in views/layout.ejs
 app.use(layouts);
@@ -182,7 +182,7 @@ app.get('/todo',
    ************************ */
 
 function getNum(coursenum){
-  // separate out a coursenum 103A into 
+  // separate out a coursenum 103A into
   // a num: 103 and a suffix: A
   i=0;
   while (i<coursenum.length && '0'<=coursenum[i] && coursenum[i]<='9'){
@@ -200,7 +200,7 @@ function times2str(times){
   } else {
     return times.map(x => time2str(x))
   }
-  
+
 }
 function min2HourMin(m){
   // converts minutes since midnight into a time string, e.g.
@@ -215,7 +215,7 @@ function min2HourMin(m){
 }
 
 function time2str(time){
-  // creates a Times string for a lecture or recitation, e.g. 
+  // creates a Times string for a lecture or recitation, e.g.
   //     "Recitation: Thu 5:00-6:30"
   const start = time.start
   const end = time.end
@@ -257,7 +257,7 @@ app.post('/courses/bySubject',
   async (req,res,next) => {
     const {subject} = req.body;
     const courses = await Course.find({subject:subject,independent_study:false}).sort({term:1,num:1,section:1})
-    
+
     res.locals.courses = courses
     // res.locals.times2str = times2str
     //res.json(courses)
@@ -285,14 +285,14 @@ app.get('/courses/byInst/:email',
     //res.json(courses)
     res.locals.courses = courses
     res.render('courselist')
-  } 
+  }
 )
 
 app.post('/courses/byInst',
   // show courses taught by a faculty send from a form
   async (req,res,next) => {
     const email = req.body.email+"@brandeis.edu";
-    const courses = 
+    const courses =
        await Course
                .find({instructor:email,independent_study:false})
                .sort({term:1,num:1,section:1})
@@ -312,7 +312,7 @@ app.get('/courses/byName/:name',
     //res.json(courses)
     res.locals.courses = courses
     res.render('courselist')
-  } 
+  }
 )
 
 app.post('/courses/byName',
@@ -320,7 +320,7 @@ app.post('/courses/byName',
   async (req,res,next) => {
     const name = req.body.course_name;
     // Regex search by title or just keyword and with case insensitivity
-    const courses = 
+    const courses =
        await Course
                .find({name:{$regex: name, $options: 'i'}})
                .sort({term:1,num:1,section:1})
@@ -356,7 +356,7 @@ app.get('/schedule/show',
   async (req,res,next) => {
     try{
       const userId = res.locals.user._id;
-      const courseIds = 
+      const courseIds =
          (await Schedule.find({userId}))
                         .sort(x => x.term)
                         .map(x => x.courseId)
@@ -405,7 +405,7 @@ app.use(function(err, req, res, next) {
 //  Starting up the server!
 // *********************************************************** //
 //Here we set the port to use between 1024 and 65535  (2^16-1)
-const port = "5000";
+const port = "8000";
 app.set("port", port);
 
 // and now we startup the server listening on that port
